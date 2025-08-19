@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import datetime, random
+import datetime, random, csv
 from collections import namedtuple
 
 prod_struct = namedtuple("prod_struct", "name categ price")
@@ -69,9 +69,36 @@ def generate_dataset(num_sales, start_date, end_date):
     # generate csv 
     sales_df.to_csv("data_clean.csv", index=False)
 
+def get_total_and_best_selling():
+    sales_csv = open('data_clean.csv', 'r')
+    sales = csv.reader(sales_csv)
+
+    total = {}
+    for sale in sales:
+        name = sale[2]
+        amnt = float(sale[4])
+        price = float(sale[5])
+
+        if(name in total):
+            total[name] += amnt * price
+        else:
+            total[name] = amnt * price
+
+    best_sell = max(total.items(), key=lambda item: item[1])
+
+    return total, best_sell
+
 if __name__ == "__main__":
     num_sales = 50
     start_date = datetime.datetime.strptime("2023-01-01", "%Y-%m-%d")
     end_date = datetime.datetime.strptime("2023-12-31", "%Y-%m-%d")
 
     generate_dataset(num_sales, start_date, end_date)
+
+    total, best_sell = get_total_and_best_selling()
+
+    print("Total de vendas por produto:")
+    for elem in total:
+        print(elem[0] + " por R$" + elem[1])
+
+    print("O item mais vendido foi: " + best_sell[0] + ", com um total de R$" + best_sell[1])
