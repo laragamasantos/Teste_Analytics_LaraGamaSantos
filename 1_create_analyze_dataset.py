@@ -70,24 +70,24 @@ def generate_dataset(num_sales, start_date, end_date):
     sales_df.to_csv("data_clean.csv", index=False)
 
 def get_total_and_amount():
-    csv_data = csv.reader(open('data_clean.csv'))
-    csv_data.__next__() # skip first row
+    sales = csv.reader(open('data_clean.csv'))
+    sales.__next__() # remove header
 
-    total_values = {}
-    total_amounts = {}
-    for sale in csv_data:
+    values = {}
+    amounts = {}
+    for sale in sales:
         name = sale[2]
         amnt = float(sale[4])
         price = float(sale[5])
 
-        if(name in total_values):
-            total_values[name] += amnt * price
-            total_amounts[name] += amnt
+        if(name in values):
+            values[name] += amnt * price
+            amounts[name] += amnt
         else:
-            total_values[name] = amnt * price
-            total_amounts[name] = amnt
+            values[name] = amnt * price
+            amounts[name] = amnt
 
-    return total_values, total_amounts
+    return values, amounts
 
 if __name__ == "__main__":
     num_sales = 50
