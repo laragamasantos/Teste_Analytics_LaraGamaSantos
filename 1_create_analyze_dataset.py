@@ -69,24 +69,25 @@ def generate_dataset(num_sales, start_date, end_date):
     # generate csv 
     sales_df.to_csv("data_clean.csv", index=False)
 
-def get_total_and_best_selling():
-    sales_csv = open('data_clean.csv', 'r')
-    sales = csv.reader(sales_csv)
+def get_total_and_amount():
+    csv_data = csv.reader(open('data_clean.csv'))
+    csv_data.__next__() # skip first row
 
-    total = {}
-    for sale in sales:
+    total_values = {}
+    total_amounts = {}
+    for sale in csv_data:
         name = sale[2]
         amnt = float(sale[4])
         price = float(sale[5])
 
-        if(name in total):
-            total[name] += amnt * price
+        if(name in total_values):
+            total_values[name] += amnt * price
+            total_amounts[name] += amnt
         else:
-            total[name] = amnt * price
+            total_values[name] = amnt * price
+            total_amounts[name] = amnt
 
-    best_sell = max(total.items(), key=lambda item: item[1])
-
-    return total, best_sell
+    return total_values, total_amounts
 
 if __name__ == "__main__":
     num_sales = 50
@@ -95,10 +96,14 @@ if __name__ == "__main__":
 
     generate_dataset(num_sales, start_date, end_date)
 
-    total, best_sell = get_total_and_best_selling()
+    total_values, total_amounts = get_total_and_amount()
 
     print("Total de vendas por produto:")
-    for elem in total:
-        print(elem[0] + " por R$" + elem[1])
+    for elem in total_values.items():
+        print(" - " + elem[0] + " por R$ %.2f" % elem[1])
 
-    print("O item mais vendido foi: " + best_sell[0] + ", com um total de R$" + best_sell[1])
+    best_sell = max(total_amounts.items(), key=lambda item: item[1])
+
+    print()
+    print("O item mais vendido foi: " + best_sell[0] + ", com um total de %.0f vendas" % best_sell[1])
+    print()
