@@ -36,14 +36,14 @@ if __name__ == "__main__":
     plt.xlabel('Month')
     plt.ylabel('Total value (R$)')
     plt.legend()
-    plt.show()
     plt.savefig('monthly_sales_value.png', dpi=300)
+    plt.show()
 
     plt.plot(months, amounts, label='Amount')
     plt.title('Total Amount of Sales per Month')
     plt.xlabel('Month')
     plt.ylabel('Total amount')
     plt.legend()
-    plt.show()
     plt.savefig('monthly_sales_amount.png', dpi=300)
+    plt.show()
   

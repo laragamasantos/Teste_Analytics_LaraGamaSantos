@@ -10,12 +10,23 @@ def create_database(c):
     sales.to_sql('sales', conn, if_exists='append', index = False)
 
 def execute_sql_commands(c):
-    res = c.execute('''SELECT Product, Category, ROUND(SUM(Amount*Price),2) AS TotalSales FROM sales
+    res1 = c.execute('''SELECT Product, Category, ROUND(SUM(Amount*Price),2) AS TotalSales FROM sales
                         GROUP BY Product
                         ORDER BY TotalSales DESC
                     ''').fetchall()
 
-    print(np.array(res))
+    print("Consulta 1:")
+    print(np.array(res1))
+
+    res2 = c.execute('''SELECT Product, Category, SUM(Amount) AS AmountOfSales, strftime('%m', Date) AS Month FROM sales
+                        WHERE Month = '06'
+                        GROUP BY Product
+                        ORDER BY AmountOfSales DESC
+                    ''').fetchall()
+
+    print()
+    print("Consulta 2:")
+    print(np.array(res2))
 
 if __name__ == "__main__":
     # Connect to database
